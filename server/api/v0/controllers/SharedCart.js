@@ -222,7 +222,9 @@ class SharedCart {
 
         req.wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(countedProducts));
+            client.send(
+              JSON.stringify({ cart_id, items: countedProducts })
+            );
           }
         });
 
@@ -280,7 +282,9 @@ class SharedCart {
 
           req.wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
-              client.send(JSON.stringify(countedProducts));
+              client.send(
+                JSON.stringify({ cart_id, items: countedProducts })
+              );
             }
           });
 
@@ -314,7 +318,9 @@ class SharedCart {
 
         req.wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(cart.items));
+            client.send(
+              JSON.stringify({ cart_id, items: cart.items })
+            );
           }
         });
 

@@ -15,7 +15,8 @@ export default function SharedCartItemsList({ cartId }) {
       const ws = new WebSocket("ws://localhost:9999");
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        setItems(data);
+        console.log("data", data.cart_id, cartId, data);
+        if (cartId == data.cart_id) setItems(data.items);
       };
 
       ws.onerror = (event) => {
@@ -27,9 +28,10 @@ export default function SharedCartItemsList({ cartId }) {
     return () => {
       if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.close();
+        wsRef.current = null;
       }
     };
-  }, []);
+  }, [cartId]);
 
   useEffect(() => {
     fetch(`http://localhost:9999/api/v1/shared-cart/${cartId}`, {
