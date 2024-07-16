@@ -39,9 +39,10 @@ export default function SignUpForm() {
           label: `1) ${data.shared_carts && data.shared_carts[0]}`,
           value: data.shared_carts[0],
         });
-        Cookies.set("auth_token", data.token, { expires: 30, path: "" });
+        Cookies.set("auth_token", data.token, { expires: 30, path: "/" });
       } else {
         const data = await res.json();
+        if (data.message) form.setFieldError("password", data.message);
         if (Array.isArray(data)) {
           data.map((o) => {
             form.setFieldError(o.path, o.msg);

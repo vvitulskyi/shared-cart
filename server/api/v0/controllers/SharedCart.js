@@ -26,13 +26,6 @@ class SharedCart {
             link,
           });
 
-          if (!doc) {
-            res.status(500).json({
-              message: "Non-existent link",
-            });
-            return;
-          }
-
           const user = await UserModel.findById(user_id);
 
           if (!user) {
@@ -42,10 +35,15 @@ class SharedCart {
             return;
           }
 
+          if (!doc) {
+            const { password_hash, ...userDoc } = user._doc;
+            res.status(200).json(userDoc);
+            return;
+          }
+
           if (user.shared_carts.includes(doc.cart_id)) {
-            res.status(500).json({
-              message: "You already have access to this cart",
-            });
+            const { password_hash, ...userDoc } = user._doc;
+            res.status(200).json(userDoc);
             return;
           }
 
@@ -56,8 +54,7 @@ class SharedCart {
           await doc.deleteOne();
 
           const { password_hash, ...userDoc } = user._doc;
-
-          res.status(200).json(user);
+          res.status(200).json(userDoc);
         } catch (err) {
           console.log(err);
           res.status(500).json({

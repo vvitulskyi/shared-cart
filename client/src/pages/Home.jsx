@@ -12,9 +12,9 @@ function Home() {
   const navigate = useNavigate();
   const { link } = location.state || {};
   // todo
-  const [cartLink] = useState(link);
+  const [cartLink, setCartLink] = useState(link);
   const [products, setProducts] = useState(null);
-  const { isCartOpen, setIsCartOpen, setUser, setCurrentCart } =
+  const { isCartOpen, setIsCartOpen, setUser, setCurrentCart, user } =
     useContext(AppContext);
 
   useEffect(() => {
@@ -34,10 +34,12 @@ function Home() {
             label: `${1}) ${data.shared_carts[0]}`,
             value: data.shared_carts[0],
           });
+          setCartLink(null);
         } else {
           const data = await res.json();
           if (data.message == "You already have access to this cart") {
             navigate(location.pathname, { state: {} });
+            setCartLink(null);
           }
         }
         setIsCartOpen(true);
@@ -50,6 +52,7 @@ function Home() {
     setCurrentCart,
     setIsCartOpen,
     setUser,
+    user,
   ]);
 
   useEffect(() => {

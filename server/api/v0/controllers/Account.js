@@ -78,16 +78,15 @@ class Account {
             items: [],
             createdAt: new Date(),
           });
-  
-          const cartItem = await cart.save();
 
-          const doc = new UserModel({
+          await cart.save();
+
+          const user = new UserModel({
             email: req.body.email,
             password_hash: hash,
-            shared_carts: [cartItem._id]
+            shared_carts: [cart._id],
           });
-
-          const user = await doc.save();
+          await user.save();
 
           const authToken = jwt.sign(
             {
@@ -128,9 +127,9 @@ class Account {
             items: [],
             createdAt: new Date(),
           });
-  
+
           const cartItem = await cart.save();
-  
+
           user.shared_carts[0] = cartItem;
           await user.save();
         }
