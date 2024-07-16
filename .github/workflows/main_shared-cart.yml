@@ -26,6 +26,10 @@ jobs:
           cd server
           npm install
           npm run start --if-present
+        env:
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          LINK_SECRET_KEY: ${{ secrets.LINK_SECRET_KEY }}
 
       - name: Build React project
         run: |
