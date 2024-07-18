@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import SharedCartItem from "./SharedCartItem";
 import AppContext from "../../contexts/App";
 import { useContext, useMemo, useRef } from "react";
+import { getCartItems, postClearCart } from "../../actions";
 
 export default function SharedCartItemsList({ cartId }) {
   const [items, setItems] = useState(null);
@@ -34,14 +35,7 @@ export default function SharedCartItemsList({ cartId }) {
   }, [cartId]);
 
   useEffect(() => {
-    fetch(`http://localhost:9999/api/v1/shared-cart/${cartId}`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    }).then(async (res) => {
+    getCartItems(cartId).then(async (res) => {
       if (res.ok) {
         const data = await res.json();
         setItems(data);
@@ -77,15 +71,7 @@ export default function SharedCartItemsList({ cartId }) {
   }
 
   const clearHandler = () => {
-    fetch(`http://localhost:9999/api/v1/shared-cart/clear`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ cart_id: cartId }),
-    }).then(async (res) => {
+    postClearCart(cartId).then(async (res) => {
       if (res.ok) {
         const data = await res.json();
         setItems(data);

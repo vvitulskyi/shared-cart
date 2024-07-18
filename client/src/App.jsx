@@ -5,6 +5,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Connection from "./pages/Connection";
 import { MantineProvider } from "@mantine/core";
+import { checkAuth } from "./actions";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -12,14 +13,7 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:9999/api/v1/account/check-auth", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    }).then(async (res) => {
+    checkAuth().then(async (res) => {
       if (res.ok) {
         const data = await res.json();
         setUser(data);

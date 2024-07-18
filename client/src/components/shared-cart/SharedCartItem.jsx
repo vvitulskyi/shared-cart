@@ -10,6 +10,7 @@ import {
 import PropTypes from "prop-types";
 import { useState, useRef, useEffect } from "react";
 import TrashIcon from "../../images/TrashIcon";
+import { postCartItemQuantity } from "../../actions";
 
 export default function SharedCartItem({ item, setItems, cartId }) {
   const [quantity, setQuantity] = useState(item.quantity || null);
@@ -24,19 +25,7 @@ export default function SharedCartItem({ item, setItems, cartId }) {
     setQuantity(val);
     timeout.current = setTimeout(
       () => {
-        fetch(`http://localhost:9999/api/v1/shared-cart/set-quantity`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            product_id: item._id,
-            cart_id: cartId,
-            quantity: val,
-          }),
-        }).then(async (res) => {
+        postCartItemQuantity(item._id, cartId, val).then(async (res) => {
           if (res.ok) {
             setItems(await res.json());
           } else {

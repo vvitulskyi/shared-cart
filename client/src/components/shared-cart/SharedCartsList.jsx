@@ -16,6 +16,7 @@ import LogoutIcon from "../../images/LogoutIcon";
 import SharedCartItemsList from "./SharedCartItemsList";
 import LinkIcon from "../../images/LinkIcon";
 import AddIcon from "../../images/AddIcon";
+import { postNewCart, postCreateLink } from "../../actions";
 
 export default function SharedCartsList() {
   const { user, setUser, currentCart, setCurrentCart } = useContext(AppContext);
@@ -52,14 +53,7 @@ export default function SharedCartsList() {
   };
 
   const addHandler = () => {
-    fetch(`http://localhost:9999/api/v1/shared-cart/create`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    }).then(async (res) => {
+    postNewCart().then(async (res) => {
       if (res.ok) {
         const data = await res.json();
         setUser(data);
@@ -72,15 +66,7 @@ export default function SharedCartsList() {
   };
 
   const shareLinkHandler = () => {
-    fetch(`http://localhost:9999/api/v1/shared-cart/create-link`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ cart_id: currentCart.value }),
-    }).then(async (res) => {
+    postCreateLink(currentCart.value).then(async (res) => {
       if (res.ok) {
         const data = await res.json();
         setSharedLink(`${location.origin}/cart-connection/${data.link}`);
