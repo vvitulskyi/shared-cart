@@ -5,7 +5,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "npm run start:client && npm run start:server",
+    "start:dev": "npm run start:client:dev && npm run start:server:dev",
+    "start:server:dev": "nodemon index.js",
+    "start:client:dev": "cd client && npm run dev",
+    "build:server": "nodemon index.js",
+    "build:client": "cd client && npm run build"
   },
   "keywords": [],
   "author": "",

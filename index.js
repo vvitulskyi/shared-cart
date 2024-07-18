@@ -8,7 +8,15 @@ import {
 } from "./api/v0/controllers/index.js";
 import mongoose from "mongoose";
 import http from "http";
+import path from "path";
 import { WebSocketServer } from "ws";
+
+const allowedOrigins = [
+  "https://shared-cart.azurewebsites.net",
+  "http://localhost:5173",
+  "http://localhost:4173",
+  "http://localhost:9999",
+];
 
 const accountApi = new Account();
 const productsListApi = new ProductsList();
@@ -25,8 +33,22 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+const __dirname = path.resolve();
+
+// Обслуживание статических файлов из React
+app.use(express.static(path.join(__dirname, 'client/dist')));
+
+// // Обработка любых других маршрутов, возвращая index.html
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+// });
+
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  const origin = req.headers.origin;
+  console.log(req.headers.origin);
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
@@ -46,10 +68,12 @@ app.use(baseApiUrl, wsMiddleware, sharedCartApi.router);
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-server.listen(process.env.PORT, () => {
+const PORT = process.env.PORT || 9999;
+
+server.listen(PORT, () => {
   mongoose
     .connect(process.env.MONGODB_URL)
     .then(() => console.log("MongoDB connected"))
     .catch((err) => console.log("MongoDB not connected", err));
-  console.log(`Server listening at http://localhost:${process.env.PORT}`);
+  console.log(`Server listening at ${PORT}`);
 });
