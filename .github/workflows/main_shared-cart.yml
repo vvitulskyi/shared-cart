@@ -23,6 +23,8 @@ jobs:
 
       - name: Install server dependencies
         run: npm install
+      - name: Install pm2
+        run: npm install pm2 -g
       - name: Start server
         run: pm2 start index.js -f
         env:
