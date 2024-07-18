@@ -6,7 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - shared-cart
 on:
   push:
     branches:
-      - main
+      - architecture-update
   workflow_dispatch:
 
 jobs:
