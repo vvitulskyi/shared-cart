@@ -14,11 +14,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./..
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up Node.js version
@@ -28,20 +23,18 @@ jobs:
           cache: 'npm'
       - name: Install server dependencies
         run: npm install
-      - name: Install pm2
-        run: npm install pm2 -g
-      - name: Drop old process
-        run: pm2 delete all
+        working-directory: ./../server
       - name: Start server
-        run: pm2 start index.js
+        run: node index.js
+        working-directory: ./../server
         env:
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           LINK_SECRET_KEY: ${{ secrets.LINK_SECRET_KEY }}
       
       - name: Install client dependencies
-        working-directory: ./client
         run: npm install
+        working-directory: ./../client
       - name: Build React project
-        working-directory: ./client
         run: npm run build
+        working-directory: ./../client
