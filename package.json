@@ -5,9 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:me": "pm2 start index.js && npm run build:client",
-    "start": "npm run build:client && pm2 start index.js",
-    "start:dev": "npm run start:client:dev && npm run start:server:dev",
+    "start": "npm run build:client && pm2 start index.js -f",
+    "start:dev": "npm run start:client:dev && pm2 start index.js -f",
     "start:server:dev": "nodemon index.js",
     "start:client:dev": "cd client && npm run dev",
     "build:server": "nodemon index.js",
