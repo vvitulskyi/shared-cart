@@ -68,7 +68,7 @@ app.use(baseApiUrl, wsMiddleware, sharedCartApi.router);
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-const PORT = process.env.PORT || 9999;
+const PORT = process.env.PORT || 8080;
 
 server.listen(PORT, () => {
   mongoose
