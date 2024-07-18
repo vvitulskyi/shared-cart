@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run start:client && npm run start:server",
+    "start:me": "pm2 start index.js && npm run build:client",
+    "start": "npm run build:client && pm2 start index.js",
     "start:dev": "npm run start:client:dev && npm run start:server:dev",
     "start:server:dev": "nodemon index.js",
     "start:client:dev": "cd client && npm run dev",
@@ -25,5 +26,8 @@
     "mongoose": "^8.4.1",
     "nodemon": "^3.1.2",
     "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "pm2": "^5.4.2"
   }
 }
