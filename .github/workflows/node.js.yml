@@ -14,29 +14,34 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./..
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Node.js version
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-    - name: Install server dependencies
-      run: npm install
-    - name: Install pm2
-      run: npm install pm2 -g
-    - name: Drop old process
-      run: pm2 delete all
-    - name: Start server
-      run: pm2 start index.js
-      env:
-        MONGODB_URL: ${{ secrets.MONGODB_URL }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        LINK_SECRET_KEY: ${{ secrets.LINK_SECRET_KEY }}
-    
-    - name: Install client dependencies
-      working-directory: ./client
-      run: npm install
-    - name: Build React project
-      working-directory: ./client
-      run: npm run build
+      - uses: actions/checkout@v4
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - name: Install server dependencies
+        run: npm install
+      - name: Install pm2
+        run: npm install pm2 -g
+      - name: Drop old process
+        run: pm2 delete all
+      - name: Start server
+        run: pm2 start index.js
+        env:
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          LINK_SECRET_KEY: ${{ secrets.LINK_SECRET_KEY }}
+      
+      - name: Install client dependencies
+        working-directory: ./client
+        run: npm install
+      - name: Build React project
+        working-directory: ./client
+        run: npm run build
