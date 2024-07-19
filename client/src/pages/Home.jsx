@@ -6,6 +6,7 @@ import ProductItem from "../components/ProductItem";
 import Sidebar from "../components/Sidebar";
 import AppContext from "../contexts/App";
 import { useContext } from "react";
+import { getProductsList, getCartConnection, postCreateList } from "../actions";
 
 function Home() {
   const location = useLocation();
@@ -19,13 +20,7 @@ function Home() {
 
   useEffect(() => {
     if (cartLink) {
-      fetch(`http://localhost:9999/api/v1/shared-cart/connection/${cartLink}`, {
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }).then(async (res) => {
+      getCartConnection(cartLink).then(async (res) => {
         if (res.ok) {
           navigate(location.pathname, { state: {} });
           const data = await res.json();
@@ -56,23 +51,13 @@ function Home() {
   ]);
 
   useEffect(() => {
-    fetch("http://localhost:9999/api/v1/products/newest").then(async (res) => {
+    getProductsList().then(async (res) => {
       if (res.ok) {
         let products = await res.json();
 
         // Create produts, if list empty
         if (products && !products.length) {
-          const resp = await fetch(
-            "http://localhost:9999/api/v1/products/create-list",
-            {
-              method: "POST",
-              credentials: "include",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          const resp = await postCreateList();
           products = await resp.json();
         }
         setProducts(products);

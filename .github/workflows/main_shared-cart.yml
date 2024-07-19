@@ -6,7 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - shared-cart
 on:
   push:
     branches:
-      - architecture-update
+      - used-branch
   workflow_dispatch:
 
 jobs:
@@ -21,15 +21,21 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: npm install, build, and test
-        run: cd server && npm install && node index.js
+      - name: Install server dependencies
+        run: npm install
+      - name: Install pm2
+        run: npm install pm2 -g
+      - name: Start server
+        run: pm2 start index.js -f
         env:
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           LINK_SECRET_KEY: ${{ secrets.LINK_SECRET_KEY }}
-
+      
+      - name: Install client dependencies
+        run: cd client && npm install
       - name: Build React project
-        run: cd client && npm install && npm run build
+        run: cd client && npm run build
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r

@@ -3,6 +3,7 @@ import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import AppContext from "../../contexts/App";
 import Cookies from "js-cookie";
+import { postRegistration } from "../../actions";
 
 export default function SignUpForm() {
   const { setUser, setCurrentCart } = useContext(AppContext);
@@ -23,15 +24,7 @@ export default function SignUpForm() {
   });
 
   const submitHandler = (values) => {
-    fetch("http://localhost:9999/api/v1/account/registration", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    }).then(async (res) => {
+    postRegistration(values).then(async (res) => {
       if (res.ok) {
         const data = await res.json();
         setUser(data);

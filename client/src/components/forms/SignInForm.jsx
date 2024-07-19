@@ -3,6 +3,7 @@ import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import AppContext from "../../contexts/App";
 import Cookies from "js-cookie";
+import { postLogin } from "../../actions";
 
 export default function SignInForm() {
   const { setUser, setCurrentCart } = useContext(AppContext);
@@ -20,15 +21,7 @@ export default function SignInForm() {
   });
 
   const submitHandler = (values) => {
-    fetch("http://localhost:9999/api/v1/account/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    }).then(async (res) => {
+    postLogin(values).then(async (res) => {
       if (res.ok) {
         const data = await res.json();
         setUser(data);
