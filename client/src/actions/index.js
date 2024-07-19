@@ -1,5 +1,5 @@
-// const origin = location.origin;
-const origin = "http://localhost:9999";
+const origin = location.origin;
+// const origin = "http://localhost:9999";
 
 const general = {
   credentials: "include",

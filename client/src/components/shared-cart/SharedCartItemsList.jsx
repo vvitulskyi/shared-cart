@@ -13,10 +13,9 @@ export default function SharedCartItemsList({ cartId }) {
 
   useEffect(() => {
     if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
-      const ws = new WebSocket("ws://localhost:9999");
+      const ws = new WebSocket(`ws://${location.host}`);
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("data", data.cart_id, cartId, data);
         if (cartId == data.cart_id) setItems(data.items);
       };
 
