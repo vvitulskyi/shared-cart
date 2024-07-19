@@ -5,12 +5,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build:client && pm2 start index.js -f",
-    "start:dev": "npm run start:client:dev && pm2 start index.js -f",
+    "start": "pm2 start index.js -f && npm run build:client",
     "start:server:dev": "nodemon index.js",
     "start:client:dev": "cd client && npm run dev",
-    "build:server": "nodemon index.js",
-    "build:client": "cd client && npm run build"
+    "build:client": "cd client && npm run build",
+    "drop:server": "pm2 delete all"
   },
   "keywords": [],
   "author": "",
@@ -25,8 +24,5 @@
     "mongoose": "^8.4.1",
     "nodemon": "^3.1.2",
     "ws": "^8.18.0"
-  },
-  "devDependencies": {
-    "pm2": "^5.4.2"
   }
 }
