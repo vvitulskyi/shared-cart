@@ -6,7 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - shared-cart
 on:
   push:
     branches:
-      - used-branch
+      - main
   workflow_dispatch:
 
 jobs:
@@ -23,14 +23,6 @@ jobs:
 
       - name: Install server dependencies
         run: npm install
-      - name: Install pm2
-        run: npm install pm2 -g
-      - name: Start server
-        run: pm2 start index.js -f
-        env:
-          MONGODB_URL: ${{ secrets.MONGODB_URL }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          LINK_SECRET_KEY: ${{ secrets.LINK_SECRET_KEY }}
       
       - name: Install client dependencies
         run: cd client && npm install
@@ -78,4 +70,12 @@ jobs:
           app-name: 'shared-cart'
           slot-name: 'Production'
           package: .
+      - name: Install pm2
+        run: npm install pm2 -g
+      - name: Start server
+        run: pm2 start index.js -f
+        env:
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          LINK_SECRET_KEY: ${{ secrets.LINK_SECRET_KEY }}
           
