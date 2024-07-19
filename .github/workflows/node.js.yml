@@ -20,11 +20,9 @@ jobs:
       
       - name: Install server dependencies
         run: npm install
-        working-directory: ./server
 
       - name: Start server
         run: node index.js
-        working-directory: ./server
         env:
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
