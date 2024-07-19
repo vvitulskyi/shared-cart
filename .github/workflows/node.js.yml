@@ -24,6 +24,9 @@ jobs:
       - name: Install pm2
         run: npm install pm2 -g
 
+      - name: Stop prew pm2
+        run: pm2 delete all
+
       - name: Start server
         run: pm2 start index.js -f
         env:
@@ -38,3 +41,22 @@ jobs:
       - name: Build React project
         run: npm run build
         working-directory: ./client
+
+      - name: Bump version and push tag
+        id: tag_version
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: true
+
+      - name: Create Release
+        if: steps.tag_version.outputs.new_tag != ''
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            index.js
+            api/**
+            client/dist/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
