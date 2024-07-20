@@ -13,6 +13,10 @@ export default function ProductItem({
 }) {
   const { currentCart, setIsCartOpen } = useContext(AppContext);
   const handleAddToCart = (productId) => {
+    if (!currentCart || !currentCart.value) {
+      setIsCartOpen(true);
+      return;
+    }
     postItemToCart(productId, currentCart.value).then(async (res) => {
       if (res.ok) {
         setIsCartOpen(true);
