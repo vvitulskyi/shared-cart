@@ -23,7 +23,7 @@ export const getCartConnection = (cartLink) =>
 export const postItemToCart = (productId, currentCart) =>
   fetch(`${origin}/api/v1/shared-cart/add-item`, {
     ...general,
-    method: "POST",
+    method: "PATCH",
     body: JSON.stringify({
       product_id: productId,
       cart_id: currentCart,
@@ -55,7 +55,7 @@ export const postRegistration = (values) =>
 export const postCartItemQuantity = (itemId, cartId, val) =>
   fetch(`${origin}/api/v1/shared-cart/set-quantity`, {
     ...general,
-    method: "POST",
+    method: "PATCH",
     body: JSON.stringify({
       product_id: itemId,
       cart_id: cartId,
@@ -72,18 +72,18 @@ export const getCartItems = (cartId) =>
 export const postClearCart = (cart_id) =>
   fetch(`${origin}/api/v1/shared-cart/clear`, {
     ...general,
-    method: "POST",
+    method: "PATCH",
     body: JSON.stringify({ cart_id }),
   });
 
 export const postNewCart = () =>
   fetch(`${origin}/api/v1/shared-cart/create`, {
     ...general,
-    method: "POST",
+    method: "PATCH",
   });
 
 export const postCreateLink = (cart_id) =>
-  fetch(`${origin}/api/v1/shared-cart/create-link`, {
+  fetch(`${origin}/api/v1/shared-cart/link/create`, {
     method: "POST",
     credentials: "include",
     headers: {

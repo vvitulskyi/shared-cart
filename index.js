@@ -39,11 +39,6 @@ const __dirname = path.resolve();
 // Обслуживание статических файлов из React
 app.use(express.static(path.join(__dirname, 'client/dist')));
 
-// // Обработка любых других маршрутов, возвращая index.html
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-// });
-
 app.use(function (req, res, next) {
   const origin = req.headers.origin;
   console.log(req.headers.origin);
@@ -65,6 +60,11 @@ app.use(function (req, res, next) {
 app.use(baseApiUrl, accountApi.router);
 app.use(baseApiUrl, productsListApi.router);
 app.use(baseApiUrl, wsMiddleware, sharedCartApi.router);
+
+// // Обработка любых других маршрутов, возвращая index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+});
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });

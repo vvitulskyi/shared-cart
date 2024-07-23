@@ -22,10 +22,6 @@ class SharedCart {
 
           const { link } = params;
 
-          const doc = await SharedCartLinkModel.findOne({
-            link,
-          });
-
           const user = await UserModel.findById(user_id);
 
           if (!user) {
@@ -35,23 +31,27 @@ class SharedCart {
             return;
           }
 
-          if (!doc) {
+          const cart = await SharedCartLinkModel.findOne({
+            link,
+          });
+
+          if (!cart) {
             const { password_hash, ...userDoc } = user._doc;
             res.status(200).json(userDoc);
             return;
           }
 
-          if (user.shared_carts.includes(doc.cart_id)) {
+          if (user.shared_carts.includes(cart.cart_id)) {
             const { password_hash, ...userDoc } = user._doc;
             res.status(200).json(userDoc);
             return;
           }
 
-          user.shared_carts.unshift(doc.cart_id);
+          user.shared_carts.unshift(cart.cart_id);
 
           await user.save();
 
-          await doc.deleteOne();
+          await cart.deleteOne();
 
           const { password_hash, ...userDoc } = user._doc;
           res.status(200).json(userDoc);
@@ -66,7 +66,7 @@ class SharedCart {
 
     // Create link for shared cart
     this.router.post(
-      "/shared-cart/create-link",
+      "/shared-cart/link/create",
       checkAuth,
       async (req, res) => {
         try {
@@ -97,7 +97,7 @@ class SharedCart {
     );
 
     // Create shared cart
-    this.router.post("/shared-cart/create", checkAuth, async (req, res) => {
+    this.router.patch("/shared-cart/create", checkAuth, async (req, res) => {
       try {
         const user = await UserModel.findById(req.user_id);
 
@@ -173,7 +173,7 @@ class SharedCart {
     });
 
     // Add item to shared cart
-    this.router.post("/shared-cart/add-item", checkAuth, async (req, res) => {
+    this.router.patch("/shared-cart/add-item", checkAuth, async (req, res) => {
       try {
         const { product_id, cart_id } = req.body;
 
@@ -222,13 +222,11 @@ class SharedCart {
 
         req.wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            client.send(
-              JSON.stringify({ cart_id, items: countedProducts })
-            );
+            client.send(JSON.stringify({ cart_id, items: countedProducts }));
           }
         });
 
-        res.status(200).json(cart);
+        res.status(200).json(countedProducts);
       } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -238,7 +236,7 @@ class SharedCart {
     });
 
     // Edit item quantity
-    this.router.post(
+    this.router.patch(
       "/shared-cart/set-quantity",
       checkAuth,
       async (req, res) => {
@@ -282,9 +280,7 @@ class SharedCart {
 
           req.wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
-              client.send(
-                JSON.stringify({ cart_id, items: countedProducts })
-              );
+              client.send(JSON.stringify({ cart_id, items: countedProducts }));
             }
           });
 
@@ -299,7 +295,7 @@ class SharedCart {
     );
 
     // Clear shared cart
-    this.router.post("/shared-cart/clear", checkAuth, async (req, res) => {
+    this.router.patch("/shared-cart/clear", checkAuth, async (req, res) => {
       try {
         const { cart_id } = req.body;
 
@@ -318,9 +314,7 @@ class SharedCart {
 
         req.wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            client.send(
-              JSON.stringify({ cart_id, items: cart.items })
-            );
+            client.send(JSON.stringify({ cart_id, items: cart.items }));
           }
         });
 
