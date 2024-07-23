@@ -1,5 +1,7 @@
 # Shared Cart
 
+Demo link: [http://shared-cart.vitinit.pro/](http://shared-cart.vitinit.pro/)
+
 ## Basic:
 
 1. Clone the project to your device.
