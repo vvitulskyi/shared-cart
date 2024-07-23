@@ -75,14 +75,18 @@ export default function SharedCartsList() {
   };
 
   const copyLinkHandler = () => {
-    navigator.clipboard
-      .writeText(sharedLink)
-      .then(() => {
-        setOpenedPopover(true);
-      })
-      .catch(() => {
-        alert("Error during link copying");
-      });
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(sharedLink)
+        .then(() => {
+          setOpenedPopover(true);
+        })
+        .catch(() => {
+          alert("Error during link copying");
+        });
+    } else {
+      alert("Not possible on this page. Please copy manually.");
+    }
   };
 
   return (
