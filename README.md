@@ -1,6 +1,6 @@
 # Shared Cart
 
-Demo link: [http://shared-cart.vitinit.pro/](http://shared-cart.vitinit.pro/)
+Demo link: [http://ec2-13-48-147-66.eu-north-1.compute.amazonaws.com/](http://ec2-13-48-147-66.eu-north-1.compute.amazonaws.com/)
 
 ## Basic:
 
