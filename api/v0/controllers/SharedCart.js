@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { Router } from "express";
 import jwt from "jsonwebtoken";
+import { ObjectId } from "mongodb";
 import SharedCartLinkModel from "../models/SharedCartLink.js";
 import SharedCartModel from "../models/SharedCart.js";
 import UserModel from "../models/User.js";
@@ -150,18 +151,24 @@ class SharedCart {
           return;
         }
 
-        const products = await ProductModel.find({
-          _id: {
-            $in: cart.items.map((o) => o.item_id),
+        const products = await ProductModel.find(
+          {
+            _id: {
+              $in: cart.items.map((o) => o.item_id),
+            },
           },
-        });
-
-        const [countedProducts, cartItems] = this.addQantity(
-          products,
-          cart.items
+          {
+            _id: 1,
+            name: 1,
+            description: 1,
+            price: 1,
+            currency: 1,
+          }
         );
-        cart.items = cartItems;
+
+        cart.items = this.clearingCartOfMissingItems(products, cart.items);
         await cart.save();
+        const countedProducts = this.quantityFromCart(products, cart.items);
 
         res.status(200).json(countedProducts);
       } catch (err) {
@@ -171,6 +178,73 @@ class SharedCart {
         });
       }
     });
+
+    // Get shared cart products NEW
+    this.router.get(
+      "/shared-cart/:cart_id/norm",
+      checkAuth,
+      async (req, res) => {
+        try {
+          const { user_id, params } = req;
+          const { cart_id } = params;
+
+          const user = await UserModel.findById(user_id);
+
+          if (!user.shared_carts.includes(cart_id)) {
+            res.status(500).json({
+              message: "No access to the cart",
+            });
+            return;
+          }
+
+          const countedProducts = await SharedCartModel.aggregate([
+            { $match: { _id: new ObjectId(`${cart_id}`) } },
+            { $unwind: "$items" },
+            {
+              $lookup: {
+                from: "products",
+                localField: "items.item_id",
+                foreignField: "_id",
+                as: "items.productDetails",
+              },
+            },
+            { $unwind: "$items.productDetails" },
+            {
+              $addFields: {
+                items: {
+                  productDetails: {
+                    quantity: "$items.quantity",
+                    addedToCartAt: "$items.addedToCartAt",
+                  },
+                },
+              },
+            },
+            {
+              $replaceRoot: { newRoot: "$items.productDetails" },
+            },
+            {
+              $project: {
+                _id: 1,
+                name: 1,
+                description: 1,
+                price: 1,
+                currency: 1,
+                quantity: 1,
+                addedToCartAt: 1,
+              },
+            },
+            { $sort: { addedToCartAt: -1 } },
+          ]);
+
+          res.status(200).json(countedProducts);
+        } catch (err) {
+          console.log(err);
+          res.status(500).json({
+            message: "Something is wrong...",
+          });
+        }
+      }
+    );
 
     // Add item to shared cart
     this.router.patch("/shared-cart/add-item", checkAuth, async (req, res) => {
@@ -195,30 +269,26 @@ class SharedCart {
           return;
         }
 
-        const productIndex = cart.items.findIndex(
-          ({ item_id }) => item_id == product_id
-        );
-        if (productIndex == -1) {
-          cart.items.unshift({ item_id: product_id, quantity: 1 });
-        } else {
-          cart.items[productIndex].quantity++;
-        }
-        await cart.save();
+        cart.items = this.editQantity(cart.items, product_id, 1, true);
 
-        /////////
-        const products = await ProductModel.find({
-          _id: {
-            $in: cart.items.map((o) => o.item_id),
+        const products = await ProductModel.find(
+          {
+            _id: {
+              $in: cart.items.map((o) => o.item_id),
+            },
           },
-        });
-
-        const [countedProducts, cartItems] = this.addQantity(
-          products,
-          cart.items
+          {
+            _id: 1,
+            name: 1,
+            description: 1,
+            price: 1,
+            currency: 1,
+          }
         );
 
-        cart.items = cartItems;
+        cart.items = this.clearingCartOfMissingItems(products, cart.items);
         await cart.save();
+        const countedProducts = this.quantityFromCart(products, cart.items);
 
         req.wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
@@ -261,22 +331,27 @@ class SharedCart {
             return;
           }
 
-          cart.items = this.normalizeItems(cart.items, product_id, quantity);
+          cart.items = this.editQantity(cart.items, product_id, quantity);
           await cart.save();
 
-          const products = await ProductModel.find({
-            _id: {
-              $in: cart.items.map((o) => o.item_id),
+          const products = await ProductModel.find(
+            {
+              _id: {
+                $in: cart.items.map((o) => o.item_id),
+              },
             },
-          });
-
-          const [countedProducts, cartItems] = this.addQantity(
-            products,
-            cart.items
+            {
+              _id: 1,
+              name: 1,
+              description: 1,
+              price: 1,
+              currency: 1,
+            }
           );
 
-          cart.items = cartItems;
+          cart.items = this.clearingCartOfMissingItems(products, cart.items);
           await cart.save();
+          const countedProducts = this.quantityFromCart(products, cart.items);
 
           req.wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
@@ -328,25 +403,26 @@ class SharedCart {
     });
   }
 
-  normalizeItems(items, product_id, quantity) {
+  editQantity(items, product_id, quantity, isAdding = false) {
     const productIndex = items.findIndex(
       ({ item_id }) => item_id == product_id
     );
 
-    if (productIndex == -1) {
-      items.unshift({ item_id: product_id, quantity });
-    }
-    if (productIndex != -1) {
-      items[productIndex].quantity = quantity;
-    }
     if (!quantity) {
       items.splice(productIndex, 1);
+    } else if (productIndex == -1) {
+      items.push({ item_id: product_id, quantity });
+    } else {
+      items[productIndex].quantity = isAdding
+        ? items[productIndex].quantity + quantity
+        : quantity;
     }
+
     return items;
   }
 
-  addQantity(products, cartItems) {
-    // Если товаров в базе меньше, чем в корзине, то удаляем лишние из корзины
+  // Если товаров найденных в базе не столько сколько корзине, то ищем и удаляем лишние из корзины
+  clearingCartOfMissingItems(products, cartItems) {
     if (products.length != cartItems.length) {
       const ids = products.map((o) => o._id.toString());
       const commonElements = cartItems.filter(({ item_id }) => {
@@ -355,19 +431,26 @@ class SharedCart {
       cartItems = commonElements;
     }
 
-    // Добавляем каунты у к товарам
-    const countedProducts = products.reduce((acc, curr) => {
-      const currId = curr._id.toString();
-      const found = cartItems.find((o) => o.item_id == currId);
+    return cartItems;
+  }
 
-      if (found) {
-        curr._doc.quantity = found.quantity;
-        acc.push(curr._doc);
-        return acc;
-      }
-    }, []);
+  // Добавляем каунты у к товарам
+  quantityFromCart(products, cartItems) {
+    const countedProducts = products
+      .reduce((acc, curr) => {
+        const currId = curr._id.toString();
+        const found = cartItems.find((o) => o.item_id == currId);
 
-    return [countedProducts, cartItems];
+        if (found) {
+          curr._doc.quantity = found.quantity;
+          curr._doc.addedToCartAt = found.addedToCartAt;
+          acc.push(curr._doc);
+          return acc;
+        }
+      }, [])
+      .sort((f, s) => (f.addedToCartAt > s.addedToCartAt ? -1 : 1));
+
+    return countedProducts;
   }
 }
 

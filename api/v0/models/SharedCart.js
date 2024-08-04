@@ -6,6 +6,11 @@ const SharedCartSchema = new Schema({
       {
         item_id: { type: Schema.Types.ObjectId, required: true },
         quantity: { type: Number, required: true, default: 1 },
+        addedToCartAt: {
+          type: Date,
+          default: Date.now,
+          required: true,
+        },
       },
     ],
     required: true,
