@@ -4,8 +4,9 @@ import ProductModel from "../models/Product.js";
 import products from "../../untils/products-list.js";
 
 class ProductsList {
+  router: Router;
   constructor() {
-    this.router = new Router();
+    this.router = Router();
 
     // Get newest products
     this.router.get("/products/newest", async (req, res) => {

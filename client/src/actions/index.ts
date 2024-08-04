@@ -1,7 +1,9 @@
-const origin = location.origin;
-// const origin = "http://localhost:9999";
+import { IUserLogin, IUserRegistration } from "@interfaces/index";
 
-const general = {
+// const origin = location.origin;
+const origin = "http://localhost:8080";
+
+const general: RequestInit = {
   credentials: "include",
   headers: {
     Accept: "application/json",
@@ -15,12 +17,12 @@ export const checkAuth = () =>
     method: "GET",
   });
 
-export const getCartConnection = (cartLink) =>
+export const getCartConnection = (cartLink: string) =>
   fetch(`${origin}/api/v1/shared-cart/connection/${cartLink}`, {
     ...general,
   });
 
-export const postItemToCart = (productId, currentCart) =>
+export const postItemToCart = (productId: string, currentCart: string) =>
   fetch(`${origin}/api/v1/shared-cart/add-item`, {
     ...general,
     method: "PATCH",
@@ -38,21 +40,25 @@ export const postCreateList = () =>
     method: "POST",
   });
 
-export const postLogin = (values) =>
+export const postLogin = (values: IUserLogin) =>
   fetch(`${origin}/api/v1/account/login`, {
     ...general,
     method: "POST",
     body: JSON.stringify(values),
   });
 
-export const postRegistration = (values) =>
+export const postRegistration = (values: IUserRegistration) =>
   fetch(`${origin}/api/v1/account/registration`, {
     ...general,
     method: "POST",
     body: JSON.stringify(values),
   });
 
-export const postCartItemQuantity = (itemId, cartId, val) =>
+export const postCartItemQuantity = (
+  itemId: string,
+  cartId: string,
+  val: number | string
+) =>
   fetch(`${origin}/api/v1/shared-cart/set-quantity`, {
     ...general,
     method: "PATCH",
@@ -63,13 +69,13 @@ export const postCartItemQuantity = (itemId, cartId, val) =>
     }),
   });
 
-export const getCartItems = (cartId) =>
+export const getCartItems = (cartId: string) =>
   fetch(`${origin}/api/v1/shared-cart/${cartId}`, {
     ...general,
     method: "GET",
   });
 
-export const postClearCart = (cart_id) =>
+export const postClearCart = (cart_id: string) =>
   fetch(`${origin}/api/v1/shared-cart/clear`, {
     ...general,
     method: "PATCH",
@@ -82,13 +88,9 @@ export const postNewCart = () =>
     method: "PATCH",
   });
 
-export const postCreateLink = (cart_id) =>
+export const postCreateLink = (cart_id: string) =>
   fetch(`${origin}/api/v1/shared-cart/link/create`, {
+    ...general,
     method: "POST",
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ cart_id }),
   });

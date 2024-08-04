@@ -8,10 +8,13 @@ import UserModel from "../models/User.js";
 import ProductModel from "../models/Product.js";
 import checkAuth from "../../untils/checkAuth.js";
 import WebSocket from "ws";
+import { ICartItem, IProduct, IProductQuatitied } from "@interfaces/index.js";
+import { Types } from "mongoose";
 
 class SharedCart {
+  router: Router;
   constructor() {
-    this.router = new Router();
+    this.router = Router();
 
     // Connect to shared cart by link
     this.router.get(
@@ -37,24 +40,24 @@ class SharedCart {
           });
 
           if (!cart) {
-            const { password_hash, ...userDoc } = user._doc;
+            const { password_hash, ...userDoc } = user;
             res.status(200).json(userDoc);
             return;
           }
 
-          if (user.shared_carts.includes(cart.cart_id)) {
-            const { password_hash, ...userDoc } = user._doc;
+          if (user.shared_carts.includes(cart._id)) {
+            const { password_hash, ...userDoc } = user;
             res.status(200).json(userDoc);
             return;
           }
 
-          user.shared_carts.unshift(cart.cart_id);
+          user.shared_carts.unshift(cart._id);
 
           await user.save();
 
           await cart.deleteOne();
 
-          const { password_hash, ...userDoc } = user._doc;
+          const { password_hash, ...userDoc } = user;
           res.status(200).json(userDoc);
         } catch (err) {
           console.log(err);
@@ -116,7 +119,7 @@ class SharedCart {
         const cartItem = await cart.save();
         user.shared_carts.unshift(cartItem._id);
         await user.save();
-        const { password_hash, ...userData } = user._doc;
+        const { password_hash, ...userData } = user;
 
         res.status(200).json(userData);
       } catch (err) {
@@ -132,17 +135,18 @@ class SharedCart {
       try {
         const { user_id, params } = req;
         const { cart_id } = params;
+        const c_id = new ObjectId(cart_id);
 
         const user = await UserModel.findById(user_id);
 
-        if (!user.shared_carts.includes(cart_id)) {
+        if (!user || !user.shared_carts.includes(c_id)) {
           res.status(500).json({
             message: "No access to the cart",
           });
           return;
         }
 
-        const cart = await SharedCartModel.findById(cart_id);
+        const cart = await SharedCartModel.findById(c_id);
 
         if (!cart) {
           res.status(500).json({
@@ -164,7 +168,7 @@ class SharedCart {
             price: 1,
             currency: 1,
           }
-        );
+        ).lean();
 
         cart.items = this.clearingCartOfMissingItems(products, cart.items);
         await cart.save();
@@ -187,10 +191,11 @@ class SharedCart {
         try {
           const { user_id, params } = req;
           const { cart_id } = params;
+          const c_id = new ObjectId(cart_id);
 
           const user = await UserModel.findById(user_id);
 
-          if (!user.shared_carts.includes(cart_id)) {
+          if (!user || !user.shared_carts.includes(c_id)) {
             res.status(500).json({
               message: "No access to the cart",
             });
@@ -198,7 +203,7 @@ class SharedCart {
           }
 
           const countedProducts = await SharedCartModel.aggregate([
-            { $match: { _id: new ObjectId(`${cart_id}`) } },
+            { $match: { _id: c_id } },
             { $unwind: "$items" },
             {
               $lookup: {
@@ -284,13 +289,13 @@ class SharedCart {
             price: 1,
             currency: 1,
           }
-        );
+        ).lean();
 
         cart.items = this.clearingCartOfMissingItems(products, cart.items);
         await cart.save();
         const countedProducts = this.quantityFromCart(products, cart.items);
 
-        req.wss.clients.forEach((client) => {
+        req.wss.clients.forEach((client: WebSocket) => {
           if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ cart_id, items: countedProducts }));
           }
@@ -347,13 +352,13 @@ class SharedCart {
               price: 1,
               currency: 1,
             }
-          );
+          ).lean();
 
           cart.items = this.clearingCartOfMissingItems(products, cart.items);
           await cart.save();
           const countedProducts = this.quantityFromCart(products, cart.items);
 
-          req.wss.clients.forEach((client) => {
+          req.wss.clients.forEach((client: WebSocket) => {
             if (client.readyState === WebSocket.OPEN) {
               client.send(JSON.stringify({ cart_id, items: countedProducts }));
             }
@@ -383,11 +388,11 @@ class SharedCart {
           return;
         }
 
-        cart.items = [];
+        cart.items = new Types.DocumentArray<ICartItem>([]);
 
         await cart.save();
 
-        req.wss.clients.forEach((client) => {
+        req.wss.clients.forEach((client: WebSocket) => {
           if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ cart_id, items: cart.items }));
           }
@@ -403,7 +408,12 @@ class SharedCart {
     });
   }
 
-  editQantity(items, product_id, quantity, isAdding = false) {
+  editQantity(
+    items: Types.DocumentArray<ICartItem>,
+    product_id: unknown,
+    quantity: number,
+    isAdding = false
+  ) {
     const productIndex = items.findIndex(
       ({ item_id }) => item_id == product_id
     );
@@ -422,31 +432,40 @@ class SharedCart {
   }
 
   // Если товаров найденных в базе не столько сколько корзине, то ищем и удаляем лишние из корзины
-  clearingCartOfMissingItems(products, cartItems) {
+  clearingCartOfMissingItems(
+    products: IProduct[],
+    cartItems: Types.DocumentArray<ICartItem>
+  ) {
     if (products.length != cartItems.length) {
       const ids = products.map((o) => o._id.toString());
       const commonElements = cartItems.filter(({ item_id }) => {
         return ids.includes(item_id.toString());
       });
-      cartItems = commonElements;
+      cartItems.splice(0, cartItems.length);
+      cartItems.push(commonElements);
     }
 
     return cartItems;
   }
 
   // Добавляем каунты у к товарам
-  quantityFromCart(products, cartItems) {
+  quantityFromCart(
+    products: IProduct[],
+    cartItems: Types.DocumentArray<ICartItem>
+  ) {
     const countedProducts = products
-      .reduce((acc, curr) => {
+      .reduce<IProductQuatitied[]>((acc, curr) => {
         const currId = curr._id.toString();
-        const found = cartItems.find((o) => o.item_id == currId);
-
+        const found = cartItems.find((o) => o.item_id.toString() == currId);
         if (found) {
-          curr._doc.quantity = found.quantity;
-          curr._doc.addedToCartAt = found.addedToCartAt;
-          acc.push(curr._doc);
-          return acc;
+          const newable: IProductQuatitied = {
+            ...curr,
+            quantity: found.quantity,
+            addedToCartAt: found.addedToCartAt,
+          };
+          acc.push(newable);
         }
+        return acc;
       }, [])
       .sort((f, s) => (f.addedToCartAt > s.addedToCartAt ? -1 : 1));
 

@@ -11,28 +11,39 @@ import PropTypes from "prop-types";
 import { useState, useRef, useEffect } from "react";
 import TrashIcon from "../../images/TrashIcon";
 import { postCartItemQuantity } from "../../actions";
+import { IProductQuatitied } from "@interfaces/index";
 
-export default function SharedCartItem({ item, setItems, cartId }) {
+export default function SharedCartItem({
+  item,
+  setItems,
+  cartId,
+}: {
+  item: IProductQuatitied;
+  setItems: React.Dispatch<React.SetStateAction<IProductQuatitied[] | null>>;
+  cartId: string;
+}) {
   const [quantity, setQuantity] = useState(item.quantity || null);
-  const timeout = useRef(null);
+  const timeout = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     setQuantity(item.quantity);
   }, [cartId, item.quantity]);
 
-  const quantityHanler = (val) => {
-    clearTimeout(timeout.current);
-    setQuantity(val);
+  const quantityHanler = (val: string | number) => {
+    if (timeout.current) clearTimeout(timeout.current);
+    setQuantity(Number(val));
     timeout.current = setTimeout(
       () => {
-        postCartItemQuantity(item._id, cartId, val).then(async (res) => {
-          if (res.ok) {
-            setItems(await res.json());
-          } else {
-            setQuantity(item.quantity);
-            alert("Update error");
+        postCartItemQuantity(item._id.toString(), cartId, val).then(
+          async (res) => {
+            if (res.ok) {
+              setItems(await res.json());
+            } else {
+              setQuantity(item.quantity);
+              alert("Update error");
+            }
           }
-        });
+        );
       },
       quantity ? 500 : 0
     );
@@ -41,7 +52,6 @@ export default function SharedCartItem({ item, setItems, cartId }) {
   return (
     <>
       <Grid
-        position="part"
         grow
         gutter="xs"
         justify="space-between"
@@ -66,13 +76,12 @@ export default function SharedCartItem({ item, setItems, cartId }) {
               clampBehavior="strict"
               min={1}
               max={100}
-              value={quantity}
+              value={quantity || 0}
               w="75"
               onChange={quantityHanler}
               allowDecimal={false}
               allowLeadingZeros={false}
               allowNegative={false}
-              allowedDecimalSeparators={false}
             />
           </Flex>
         </Grid.Col>

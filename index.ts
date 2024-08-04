@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 import http from "http";
 import path from "path";
 import { WebSocketServer } from "ws";
+import { Request, Response, NextFunction } from "express";
 
 const allowedOrigins = [
   "https://shared-cart.azurewebsites.net",
@@ -23,7 +24,7 @@ const accountApi = new Account();
 const productsListApi = new ProductsList();
 const sharedCartApi = new SharedCart();
 
-function wsMiddleware(req, res, next) {
+function wsMiddleware(req: Request, res: Response, next: NextFunction) {
   req.wss = wss;
   next();
 }
@@ -37,13 +38,12 @@ app.use(cookieParser());
 const __dirname = path.resolve();
 
 // Обслуживание статических файлов из React
-app.use(express.static(path.join(__dirname, 'client/dist')));
+app.use(express.static(path.join(__dirname, "client/dist")));
 
 app.use(function (req, res, next) {
-  const origin = req.headers.origin;
-  console.log(req.headers.origin);
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
+  const origin: string | undefined = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
   }
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -53,7 +53,7 @@ app.use(function (req, res, next) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
 
@@ -62,8 +62,8 @@ app.use(baseApiUrl, productsListApi.router);
 app.use(baseApiUrl, wsMiddleware, sharedCartApi.router);
 
 // // Обработка любых других маршрутов, возвращая index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/dist", "index.html"));
 });
 
 const server = http.createServer(app);

@@ -5,11 +5,12 @@ import SharedCartItem from "./SharedCartItem";
 import AppContext from "../../contexts/App";
 import { useContext, useMemo, useRef } from "react";
 import { getCartItems, postClearCart } from "../../actions";
+import { IProductQuatitied } from "@interfaces/index";
 
-export default function SharedCartItemsList({ cartId }) {
-  const [items, setItems] = useState(null);
+export default function SharedCartItemsList({ cartId }: { cartId: string }) {
+  const [items, setItems] = useState<IProductQuatitied[] | null>(null);
   const { setIsCartOpen } = useContext(AppContext);
-  const wsRef = useRef(null);
+  const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
@@ -89,7 +90,7 @@ export default function SharedCartItemsList({ cartId }) {
       {items.map((item) => (
         <SharedCartItem
           item={item}
-          key={item._id}
+          key={item._id.toString()}
           setItems={setItems}
           cartId={cartId}
         />
@@ -97,7 +98,7 @@ export default function SharedCartItemsList({ cartId }) {
       <Title order={3} ta="center" td="underline" mt="20">
         Total cost: {totalQuantity.toFixed(2)} {items[0].currency}
       </Title>
-      <Group justify="center" mt="md" wrap="no-wrap">
+      <Group justify="center" mt="md">
         <Button w="50%" color="red" onClick={clearHandler}>
           Clear cart
         </Button>

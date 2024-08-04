@@ -1,4 +1,6 @@
-const products = [
+import { IProduct } from "@interfaces/index";
+
+const products: Array<Omit<IProduct, "_id">> = [
   {
     name: "Product 1",
     description: "Prodict description 1",
