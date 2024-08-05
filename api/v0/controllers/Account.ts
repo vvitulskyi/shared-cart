@@ -24,7 +24,9 @@ class Account {
       handleValidationErrors,
       async (req: Request, res: Response) => {
         try {
-          const user = await UserModel.findOne({ email: req.body.email });
+          const user = await UserModel.findOne({
+            email: req.body.email,
+          }).lean();
           if (!user) {
             return res.status(404).json({
               message: "User not found",
@@ -90,9 +92,11 @@ class Account {
           });
           await user.save();
 
+          const userObject = user.toObject();
+
           const authToken = jwt.sign(
             {
-              _id: user._id,
+              _id: userObject._id,
             },
             process.env.SECRET_KEY,
             {
@@ -100,7 +104,7 @@ class Account {
             }
           );
 
-          const { password_hash, _id, ...userData } = user;
+          const { password_hash, _id, ...userData } = userObject;
 
           res.status(200).json({
             ...userData,

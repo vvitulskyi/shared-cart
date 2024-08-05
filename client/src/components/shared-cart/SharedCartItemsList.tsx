@@ -98,11 +98,11 @@ export default function SharedCartItemsList({ cartId }: { cartId: string }) {
       <Title order={3} ta="center" td="underline" mt="20">
         Total cost: {totalQuantity.toFixed(2)} {items[0].currency}
       </Title>
-      <Group justify="center" mt="md">
-        <Button w="50%" color="red" onClick={clearHandler}>
+      <Group justify="center" mt="md" wrap="wrap" grow={true}>
+        <Button w="50%" miw="200px" color="red" onClick={clearHandler}>
           Clear cart
         </Button>
-        <Button w="50%" color="green" onClick={checkoutHandler}>
+        <Button w="50%" miw="200px" color="green" onClick={checkoutHandler}>
           Continue to Checkout
         </Button>
       </Group>

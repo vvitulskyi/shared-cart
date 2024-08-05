@@ -39,25 +39,30 @@ class SharedCart {
             link,
           });
 
-          if (!cart) {
-            const { password_hash, ...userDoc } = user;
+          if (!cart || !cart.cart_id) {
+            const userObject = user.toObject();
+            const { password_hash, _id, ...userDoc } = userObject;
             res.status(200).json(userDoc);
             return;
           }
 
-          if (user.shared_carts.includes(cart._id)) {
-            const { password_hash, ...userDoc } = user;
+          if (
+            user.shared_carts.map((o) => o.toString()).includes(cart.cart_id)
+          ) {
+            const userObject = user.toObject();
+            const { password_hash, _id, ...userDoc } = userObject;
+            await cart.deleteOne();
             res.status(200).json(userDoc);
             return;
           }
 
-          user.shared_carts.unshift(cart._id);
+          user.shared_carts.unshift(new ObjectId(cart.cart_id));
 
           await user.save();
-
           await cart.deleteOne();
+          const userObject = user.toObject();
 
-          const { password_hash, ...userDoc } = user;
+          const { password_hash, _id, ...userDoc } = userObject;
           res.status(200).json(userDoc);
         } catch (err) {
           console.log(err);
@@ -119,7 +124,8 @@ class SharedCart {
         const cartItem = await cart.save();
         user.shared_carts.unshift(cartItem._id);
         await user.save();
-        const { password_hash, ...userData } = user;
+        const userObject = user.toObject();
+        const { password_hash, _id, ...userData } = userObject;
 
         res.status(200).json(userData);
       } catch (err) {
