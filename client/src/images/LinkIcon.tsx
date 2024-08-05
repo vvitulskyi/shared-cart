@@ -1,4 +1,4 @@
-export default function AddIcon(props) {
+export default function LinkIcon(props: { style?: { marginRight: string } } | null) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,9 +13,9 @@ export default function AddIcon(props) {
       {...props}
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M4 18v-4a1 1 0 0 1 1 -1h14a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1z" />
-      <path d="M12 9v-4" />
-      <path d="M10 7l4 0" />
+      <path d="M9 15l6 -6" />
+      <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" />
+      <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />
     </svg>
   );
 }

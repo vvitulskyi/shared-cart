@@ -17,10 +17,11 @@ import SharedCartItemsList from "./SharedCartItemsList";
 import LinkIcon from "../../images/LinkIcon";
 import AddIcon from "../../images/AddIcon";
 import { postNewCart, postCreateLink } from "../../actions";
+import { ICartOption } from "@interfaces/index";
 
 export default function SharedCartsList() {
   const { user, setUser, currentCart, setCurrentCart } = useContext(AppContext);
-  const [sharedLink, setSharedLink] = useState(null);
+  const [sharedLink, setSharedLink] = useState<string | null>(null);
   const [openedPopover, setOpenedPopover] = useState(false);
 
   useEffect(() => {
@@ -29,22 +30,24 @@ export default function SharedCartsList() {
   }, [currentCart]);
 
   const options = useMemo(() => {
-    if (!user.shared_carts) return null;
+    if (!user || !user.shared_carts) return null;
     const carts = user.shared_carts.map((o, i) => ({
       label: `${i + 1}) ${o}`,
-      value: o,
+      value: o.toString(),
     }));
     return carts;
-  }, [user.shared_carts]);
+  }, [user]);
 
-  if (!options || !currentCart) {
+  if (!options || !currentCart || !currentCart.value) {
     return <div>Logading...</div>;
   }
 
-  const changeHanler = (_value) => {
+  const changeHanler = (_value: string | null) => {
     if (!_value) return;
-    const selectedCart = options.find(({ value }) => value == _value);
-    setCurrentCart(selectedCart);
+    const selectedCart: ICartOption | undefined = options.find(
+      ({ value }) => value == _value
+    );
+    if (selectedCart) setCurrentCart(selectedCart);
   };
 
   const logoutHandler = () => {
@@ -75,7 +78,7 @@ export default function SharedCartsList() {
   };
 
   const copyLinkHandler = () => {
-    if (navigator.clipboard) {
+    if (navigator.clipboard && sharedLink) {
       navigator.clipboard
         .writeText(sharedLink)
         .then(() => {
@@ -92,8 +95,8 @@ export default function SharedCartsList() {
   return (
     <Box>
       <Flex gap="sm" justify="left" align="center" direction="row" wrap="wrap">
-        <Text order={6} truncate="end" maw="100%">
-          Loggined at {user.email}
+        <Text truncate="end" maw="100%">
+          Loggined at {user && user.email}
         </Text>
         <Tooltip label="Log-out" color="gray">
           <Button onClick={logoutHandler} variant="light" size="compact-xl">
@@ -108,7 +111,7 @@ export default function SharedCartsList() {
         value={currentCart.value}
         onChange={changeHanler}
       />
-      <Flex justify="center" mt="md" wrap="no-wrap" direction="column" mb="md">
+      <Flex justify="center" mt="md" direction="column" mb="md">
         <Button variant="filled" color="orange" onClick={addHandler}>
           <AddIcon style={{ marginRight: "10px" }} />
           Add new cart

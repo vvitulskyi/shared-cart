@@ -13,7 +13,7 @@ const UserSchema = new Schema({
   shared_carts: {
     type: [Schema.Types.ObjectId],
     validate: {
-      validator: function (v) {
+      validator: function (v: Array<Schema.Types.ObjectId>) {
         return v.length > 0;
       },
       message: "The user must contain at least one shared_cart!",

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import AppContext from "../contexts/App";
 import { useContext } from "react";
 import { postItemToCart } from "../actions";
+import { IProduct } from "@interfaces/index";
 
 export default function ProductItem({
   _id,
@@ -10,9 +11,9 @@ export default function ProductItem({
   description,
   price,
   currency,
-}) {
+}: IProduct) {
   const { currentCart, setIsCartOpen } = useContext(AppContext);
-  const handleAddToCart = (productId) => {
+  const handleAddToCart = (productId: string) => {
     if (!currentCart || !currentCart.value) {
       setIsCartOpen(true);
       return;
@@ -26,7 +27,7 @@ export default function ProductItem({
   return (
     <Grid.Col span={{ base: 12, xs: 6, md: 3 }}>
       <Card shadow="sm" padding="lg">
-        <Text weight={500}>{name}</Text>
+        <Text>{name}</Text>
         <Text size="sm" style={{ marginBottom: 10 }}>
           {description}
         </Text>
@@ -34,7 +35,7 @@ export default function ProductItem({
           {price.toFixed(2)} {currency}
         </Badge>
         <Button
-          onClick={() => handleAddToCart(_id)}
+          onClick={() => handleAddToCart(_id.toString())}
           style={{ marginTop: 10 }}
           color="teal"
         >

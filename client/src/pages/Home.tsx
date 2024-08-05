@@ -7,6 +7,7 @@ import Sidebar from "../components/Sidebar";
 import AppContext from "../contexts/App";
 import { useContext } from "react";
 import { getProductsList, getCartConnection, postCreateList } from "../actions";
+import { IProduct } from "@interfaces/index";
 
 function Home() {
   const location = useLocation();
@@ -14,7 +15,7 @@ function Home() {
   const { link } = location.state || {};
   // todo
   const [cartLink, setCartLink] = useState(link);
-  const [products, setProducts] = useState(null);
+  const [products, setProducts] = useState<IProduct[] | null>(null);
   const { isCartOpen, setIsCartOpen, setUser, setCurrentCart, user } =
     useContext(AppContext);
 
@@ -53,7 +54,7 @@ function Home() {
   useEffect(() => {
     getProductsList().then(async (res) => {
       if (res.ok) {
-        let products = await res.json();
+        let products: IProduct[] = await res.json();
 
         // Create produts, if list empty
         if (products && !products.length) {
@@ -71,7 +72,7 @@ function Home() {
 
   return (
     <AppShell header={{ height: 60 }} padding="md">
-      <AppShell.Header padding="md">
+      <AppShell.Header>
         <Flex
           mih={60}
           gap="sm"
@@ -92,7 +93,7 @@ function Home() {
       <AppShell.Main>
         <Grid>
           {products.map((product) => (
-            <ProductItem key={product._id} {...product} />
+            <ProductItem key={product._id.toString()} {...product} />
           ))}
         </Grid>
 

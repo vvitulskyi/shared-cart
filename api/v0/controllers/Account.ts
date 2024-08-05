@@ -10,17 +10,19 @@ import handleValidationErrors from "../../untils/handleValidationErrors.js";
 import checkAuth from "../../untils/checkAuth.js";
 import UserModel from "../models/User.js";
 import SharedCartModel from "../models/SharedCart.js";
+import { Request, Response } from "express";
 
 class Account {
+  router: Router;
   constructor() {
-    this.router = new Router();
+    this.router = Router();
 
     // Login
     this.router.post(
       "/account/login",
       loginValidator,
       handleValidationErrors,
-      async (req, res) => {
+      async (req: Request, res: Response) => {
         try {
           const user = await UserModel.findOne({ email: req.body.email });
           if (!user) {
@@ -30,7 +32,7 @@ class Account {
           }
           const isValidPass = await bcrypt.compare(
             req.body.password,
-            user._doc.password_hash
+            user.password_hash
           );
           if (!isValidPass) {
             return res.status(400).json({
@@ -48,7 +50,7 @@ class Account {
             }
           );
 
-          const { password_hash, _id, ...userData } = user._doc;
+          const { password_hash, _id, ...userData } = user;
 
           res.status(200).json({
             ...userData,
@@ -68,7 +70,7 @@ class Account {
       "/account/registration",
       registrationValidator,
       handleValidationErrors,
-      async (req, res) => {
+      async (req: Request, res: Response) => {
         try {
           const password = req.body.password;
           const salt = await bcrypt.genSalt(10);
@@ -98,7 +100,7 @@ class Account {
             }
           );
 
-          const { password_hash, ...userData } = user._doc;
+          const { password_hash, _id, ...userData } = user;
 
           res.status(200).json({
             ...userData,
@@ -123,18 +125,21 @@ class Account {
         }
 
         if (!user.shared_carts || !user.shared_carts.length) {
-          const cart = new SharedCartModel({
+          const newCart = new SharedCartModel({
             items: [],
             createdAt: new Date(),
           });
 
-          const cartItem = await cart.save();
+          const cart = await newCart.save();
 
-          user.shared_carts[0] = cartItem;
+          user.shared_carts.push(cart._id);
+
           await user.save();
         }
 
-        const { password_hash, ...userData } = user._doc;
+        const userObject = user.toObject();
+
+        const { password_hash, _id, ...userData } = userObject;
 
         res.status(200).json({
           ...userData,

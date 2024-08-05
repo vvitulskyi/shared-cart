@@ -6,11 +6,12 @@ import Home from "./pages/Home";
 import Connection from "./pages/Connection";
 import { MantineProvider } from "@mantine/core";
 import { checkAuth } from "./actions";
+import { ICartOption, IUserInfo } from "@interfaces/index";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [currentCart, setCurrentCart] = useState(null);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [user, setUser] = useState<IUserInfo | null>(null);
+  const [currentCart, setCurrentCart] = useState<ICartOption | null>(null);
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
   useEffect(() => {
     checkAuth().then(async (res) => {
@@ -35,7 +36,6 @@ function App() {
           setCurrentCart,
           isCartOpen,
           setIsCartOpen,
-          // wsItems
         }}
       >
         <BrowserRouter>

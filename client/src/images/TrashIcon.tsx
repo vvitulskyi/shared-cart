@@ -1,4 +1,4 @@
-export default function TrashIcon(props) {
+export default function TrashIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +10,6 @@ export default function TrashIcon(props) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      {...props}
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M4 7l16 0" />

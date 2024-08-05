@@ -3,25 +3,29 @@ import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import AppContext from "../../contexts/App";
 import Cookies from "js-cookie";
-import { postLogin } from "../../actions";
+import { postRegistration } from "../../actions";
+import { IUserRegistration } from "@interfaces/index";
 
-export default function SignInForm() {
+export default function SignUpForm() {
   const { setUser, setCurrentCart } = useContext(AppContext);
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       email: "",
       password: "",
+      confirm_password: "",
     },
 
     validate: {
-      email: (value) => (/^\S+@\S+.\S+$/.test(value) ? null : "Invalid email"),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       password: (value) => (value.length > 5 ? null : "Invalid password"),
+      confirm_password: (value, values) =>
+        value !== values.password ? "Passwords must match" : null,
     },
   });
 
-  const submitHandler = (values) => {
-    postLogin(values).then(async (res) => {
+  const submitHandler = (values: IUserRegistration) => {
+    postRegistration(values).then(async (res) => {
       if (res.ok) {
         const data = await res.json();
         setUser(data);
@@ -59,6 +63,15 @@ export default function SignInForm() {
         placeholder="********"
         key={form.key("password")}
         {...form.getInputProps("password")}
+        mt="md"
+      />
+
+      <PasswordInput
+        withAsterisk
+        label="Password confirmation"
+        placeholder="********"
+        key={form.key("confirm_password")}
+        {...form.getInputProps("confirm_password")}
         mt="md"
       />
 
