@@ -112,7 +112,6 @@
     "./dist",
     "./client/node_modules",
     "./client/dist",
-    "./client"
   ],
   "include": [
     "./**/*.*",
