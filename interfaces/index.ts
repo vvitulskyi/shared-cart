@@ -1,5 +1,14 @@
-import { Types, Document } from "mongoose";
-import React from "react";
+import { Types, Document, ObjectId } from "mongoose";
+import { WebSocketServer } from "ws";
+
+declare global {
+  namespace Express {
+    interface Request {
+      wss?: WebSocketServer;
+      user_id?: ObjectId
+    }
+  }
+}
 
 export interface IUserLogin {
   email: string;
@@ -28,13 +37,6 @@ export interface ICartItem {
   quantity: number;
   addedToCartAt: Date;
 }
-
-// export interface ICartDocument extends Document {
-//   _id: Types.ObjectId;
-//   items: ICartItem;
-//   createdAt: Date;
-//   __v: number;
-// }
 
 export interface IUserInfo {
   email: string;
