@@ -301,7 +301,7 @@ class SharedCart {
         await cart.save();
         const countedProducts = this.quantityFromCart(products, cart.items);
 
-        req.wss.clients.forEach((client: WebSocket) => {
+        req.wss && req.wss.clients.forEach((client: WebSocket) => {
           if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ cart_id, items: countedProducts }));
           }
@@ -364,7 +364,7 @@ class SharedCart {
           await cart.save();
           const countedProducts = this.quantityFromCart(products, cart.items);
 
-          req.wss.clients.forEach((client: WebSocket) => {
+          req.wss && req.wss.clients.forEach((client: WebSocket) => {
             if (client.readyState === WebSocket.OPEN) {
               client.send(JSON.stringify({ cart_id, items: countedProducts }));
             }
@@ -398,7 +398,7 @@ class SharedCart {
 
         await cart.save();
 
-        req.wss.clients.forEach((client: WebSocket) => {
+        req.wss && req.wss.clients.forEach((client: WebSocket) => {
           if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ cart_id, items: cart.items }));
           }
