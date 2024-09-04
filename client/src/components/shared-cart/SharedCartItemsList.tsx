@@ -1,47 +1,13 @@
 import { Box, Title, Group, Button } from "@mantine/core";
-import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import SharedCartItem from "./SharedCartItem";
-import AppContext from "../../contexts/App";
-import { useContext, useMemo, useRef } from "react";
-import { getCartItems, postClearCart } from "../../actions";
-import { IProductQuatitied } from "@interfaces/index";
+import { useMemo } from "react";
+import useItems from "@hooks/useItems";
 
 export default function SharedCartItemsList({ cartId }: { cartId: string }) {
-  const [items, setItems] = useState<IProductQuatitied[] | null>(null);
-  const { setIsCartOpen } = useContext(AppContext);
-  const wsRef = useRef<WebSocket | null>(null);
-
-  useEffect(() => {
-    if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
-      const ws = new WebSocket(`ws://${location.host}`);
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (cartId == data.cart_id) setItems(data.items);
-      };
-
-      ws.onerror = (event) => {
-        console.error("WS error", event);
-      };
-      wsRef.current = ws;
-    }
-
-    return () => {
-      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-        wsRef.current.close();
-        wsRef.current = null;
-      }
-    };
-  }, [cartId]);
-
-  useEffect(() => {
-    getCartItems(cartId).then(async (res) => {
-      if (res.ok) {
-        const data = await res.json();
-        setItems(data);
-      }
-    });
-  }, [cartId]);
+  const { items, setItems, clearHandler, checkoutHandler } = useItems({
+    cartId,
+  });
 
   const totalQuantity = useMemo(() => {
     let tq = 0;
@@ -69,21 +35,6 @@ export default function SharedCartItemsList({ cartId }: { cartId: string }) {
       </Title>
     );
   }
-
-  const clearHandler = () => {
-    postClearCart(cartId).then(async (res) => {
-      if (res.ok) {
-        const data = await res.json();
-        setItems(data);
-        setIsCartOpen(false);
-      }
-    });
-  };
-
-  const checkoutHandler = () => {
-    setIsCartOpen(false);
-    setTimeout(() => alert("The order processing has been completed"), 500);
-  };
 
   return (
     <Box>

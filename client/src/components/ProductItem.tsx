@@ -1,9 +1,7 @@
 import { Grid, Card, Text, Button, Badge } from "@mantine/core";
 import PropTypes from "prop-types";
-import AppContext from "../contexts/App";
-import { useContext } from "react";
-import { postItemToCart } from "../actions";
 import { IProduct } from "@interfaces/index";
+import useProductItem from "@hooks/useProductItem";
 
 export default function ProductItem({
   _id,
@@ -12,18 +10,8 @@ export default function ProductItem({
   price,
   currency,
 }: IProduct) {
-  const { currentCart, setIsCartOpen } = useContext(AppContext);
-  const handleAddToCart = (productId: string) => {
-    if (!currentCart || !currentCart.value) {
-      setIsCartOpen(true);
-      return;
-    }
-    postItemToCart(productId, currentCart.value).then(async (res) => {
-      if (res.ok) {
-        setIsCartOpen(true);
-      }
-    });
-  };
+  const { handleAddToCart } = useProductItem();
+
   return (
     <Grid.Col span={{ base: 12, xs: 6, md: 3 }}>
       <Card shadow="sm" padding="lg">
