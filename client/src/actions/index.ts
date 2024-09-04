@@ -1,7 +1,7 @@
 import { IUserLogin, IUserRegistration } from "@interfaces/index";
 
-const origin = location.origin;
-// const origin = "http://localhost:8080";
+// const origin = location.origin;
+const origin = "http://localhost:8080";
 
 const general: RequestInit = {
   credentials: "include",
