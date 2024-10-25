@@ -18,6 +18,7 @@ const allowedOrigins = [
   "http://localhost:4173",
   "http://localhost:9999",
   "http://localhost:8080",
+  "http://localhost:3000",
 ];
 
 const accountApi = new Account();

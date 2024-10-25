@@ -1,0 +1,21 @@
+"use client";
+import { Drawer } from "@mantine/core";
+import useHomePage from "../../hooks/useHomePage";
+import Sidebar from "../Sidebar";
+
+export default function ClientBtn() {
+  const { setIsCartOpen, isCartOpen } = useHomePage();
+
+  return (
+    <Drawer
+      opened={isCartOpen}
+      onClose={() => setIsCartOpen(false)}
+      title="Your Shared Carts"
+      padding="lg"
+      position="right"
+      size="lg"
+    >
+      <Sidebar />
+    </Drawer>
+  );
+}

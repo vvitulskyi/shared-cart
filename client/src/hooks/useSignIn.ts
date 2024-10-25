@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import AppContext from "../contexts/App";
+import { AppContext } from "../contexts/AppContextProvider";
 import { useForm } from "@mantine/form";
-import { IUserLogin } from "@interfaces/index";
+import { IUserLogin } from "./../../../interfaces/index";
 import { postLogin } from "../actions";
 import Cookies from "js-cookie";
 

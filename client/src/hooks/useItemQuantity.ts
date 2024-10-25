@@ -1,6 +1,8 @@
+'use client';
+
 import { useEffect, useRef, useState } from "react";
 import { postCartItemQuantity } from "../actions";
-import { IProductQuatitied } from "@interfaces/index";
+import { IProductQuatitied } from "./../../../interfaces/index";
 
 export default function useItemQuantity({
   item,

@@ -10,7 +10,7 @@
     "start:server:dev": "tsx watch index.ts",
     "start:client:dev": "cd client && npm run dev",
     "build:client": "cd client && npm run build",
-    "drop:server": "pm2 delete all"
+    "drop": "pm2 delete all"
   },
   "keywords": [],
   "author": "",
