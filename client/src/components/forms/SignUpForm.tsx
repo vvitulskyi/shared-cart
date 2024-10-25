@@ -1,4 +1,4 @@
-import useSignUp from "@hooks/useSignUp";
+import useSignUp from "./../../hooks/useSignUp";
 import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
 
 export default function SignUpForm() {

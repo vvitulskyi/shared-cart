@@ -12,7 +12,7 @@ import LogoutIcon from "../../images/LogoutIcon";
 import SharedCartItemsList from "./SharedCartItemsList";
 import LinkIcon from "../../images/LinkIcon";
 import AddIcon from "../../images/AddIcon";
-import useSharedLink from "@hooks/useSharedLink";
+import useSharedLink from "./../../hooks/useSharedLink";
 
 export default function SharedCartsList() {
   const {

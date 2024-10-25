@@ -1,7 +1,9 @@
+"use client";
+
 import { useContext, useEffect, useRef, useState } from "react";
-import { IProductQuatitied } from "@interfaces/index";
+import { IProductQuatitied } from "./../../../interfaces/index";
 import { getCartItems, postClearCart } from "../actions";
-import AppContext from "../contexts/App";
+import { AppContext } from "../contexts/AppContextProvider";
 
 export default function useItems({ cartId }: { cartId: string }) {
   const { setIsCartOpen } = useContext(AppContext);
@@ -11,7 +13,8 @@ export default function useItems({ cartId }: { cartId: string }) {
 
   useEffect(() => {
     if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
-      const ws = new WebSocket(`ws://${location.host}`);
+      // const ws = new WebSocket(`ws://${location.host}`);
+      const ws = new WebSocket(`ws://localhost:8080`);
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (cartId == data.cart_id) setItems(data.items);
