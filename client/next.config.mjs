@@ -5,15 +5,15 @@ const nextConfig = {
   experimental: {
     typedRoutes: true,
   },
-  redirects: () => {
-    return [
-      {
-        source: "/cart-connection/:link",
-        destination: "/?link=:link",
-        permanent: true,
-      },
-    ];
-  },
+  // redirects: () => {
+  //   return [
+  //     {
+  //       source: "/cart-connection/:link",
+  //       destination: "/?link=:link",
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;
