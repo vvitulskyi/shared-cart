@@ -1,7 +1,9 @@
 import { IUserLogin, IUserRegistration } from "@interfaces/index";
 
-const origin = location.origin;
+// const origin = location.origin;
 // const origin = "http://localhost:8080";
+// const origin = "http://ec2-13-48-147-66.eu-north-1.compute.amazonaws.com";
+let origin = `http://${process.env.NEXT_PUBLIC_API_DOMAIN}`;
 
 const general: RequestInit = {
   credentials: "include",
@@ -32,7 +34,8 @@ export const postItemToCart = (productId: string, currentCart: string) =>
     }),
   });
 
-export const getProductsList = () => fetch(`${origin}/api/v1/products/newest`, { next: { revalidate: 30 } });
+export const getProductsList = () =>
+  fetch(`${origin}/api/v1/products/newest`, { next: { revalidate: 30 } });
 
 export const postCreateList = () =>
   fetch(`${origin}/api/v1/products/create-list`, {
