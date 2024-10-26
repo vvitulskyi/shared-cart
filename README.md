@@ -1,7 +1,5 @@
 # Shared Cart
 
-Demo link: [http://ec2-13-48-147-66.eu-north-1.compute.amazonaws.com/](http://ec2-13-48-147-66.eu-north-1.compute.amazonaws.com/)
-
 ## Basic:
 
 1. Clone the project to your device.
@@ -23,8 +21,15 @@ LINK_SECRET_KEY=secret_key
 ```
 
 4. From the project root, navigate to the `client` folder using the command `cd client`
-5. Install the necessary packages using the command `npm install`.
-6. Start the localhost using the command `npm run start` from the project root
-7. Use command `npm run drop:server` for stop server
+5. Create a file named `.env` in the project and add the variable `NEXT_PUBLIC_API_DOMAIN`.
+   Example:
+
+```
+NEXT_PUBLIC_API_DOMAIN=localhost:8080
+```
+
+6. Install the necessary packages using the command `npm install`.
+7. Start the localhost using the command `npm run start` from the project root
+8. Use command `npm run drop:server` for stop server
 
 If you have any problems with starting the project, please contact me at v.vitulskyi@gmail.com
