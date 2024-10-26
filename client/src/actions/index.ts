@@ -1,4 +1,4 @@
-import { IUserLogin, IUserRegistration } from "./../../../interfaces/index";
+import { IUserLogin, IUserRegistration } from "@interfaces/index";
 
 // const origin = location.origin;
 const origin = "http://localhost:8080";
@@ -32,7 +32,7 @@ export const postItemToCart = (productId: string, currentCart: string) =>
     }),
   });
 
-export const getProductsList = () => fetch(`${origin}/api/v1/products/newest`/*, { next: { revalidate: 30 } }*/);
+export const getProductsList = () => fetch(`${origin}/api/v1/products/newest`, { next: { revalidate: 30 } });
 
 export const postCreateList = () =>
   fetch(`${origin}/api/v1/products/create-list`, {

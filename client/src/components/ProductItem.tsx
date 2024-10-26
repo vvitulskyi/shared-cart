@@ -2,8 +2,8 @@
 
 import { Card, Text, Button, Badge, Grid } from "@mantine/core";
 import PropTypes from "prop-types";
-import { IProduct } from "./../../../interfaces/index";
-import useProductItem from "./../hooks/useProductItem";
+import { IProduct } from "@interfaces/index";
+import useProductItem from "@hooks/useProductItem";
 
 export default function ProductItem({
   _id,

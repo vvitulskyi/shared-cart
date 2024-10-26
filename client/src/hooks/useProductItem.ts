@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { postItemToCart } from "../actions";
-import { AppContext } from "../contexts/AppContextProvider";
+import { postItemToCart } from "@actions";
+import { AppContext } from "@contexts/AppContextProvider";
 
 export default function useProductItem() {
   const { currentCart, setIsCartOpen } = useContext(AppContext);

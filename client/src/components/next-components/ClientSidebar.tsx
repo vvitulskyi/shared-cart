@@ -1,6 +1,6 @@
 "use client";
 import { Drawer } from "@mantine/core";
-import useHomePage from "../../hooks/useHomePage";
+import useHomePage from "@hooks/useHomePage";
 import Sidebar from "../Sidebar";
 
 export default function ClientBtn() {

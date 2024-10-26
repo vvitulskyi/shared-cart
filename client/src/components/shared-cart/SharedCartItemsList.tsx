@@ -2,7 +2,7 @@ import { Box, Title, Group, Button } from "@mantine/core";
 import PropTypes from "prop-types";
 import SharedCartItem from "./SharedCartItem";
 import { useMemo } from "react";
-import useItems from "./../../hooks/useItems";
+import useItems from "@hooks/useItems";
 
 export default function SharedCartItemsList({ cartId }: { cartId: string }) {
   const { items, setItems, clearHandler, checkoutHandler } = useItems({

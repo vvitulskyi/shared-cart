@@ -8,9 +8,9 @@ import {
   Divider,
 } from "@mantine/core";
 import PropTypes from "prop-types";
-import TrashIcon from "../../images/TrashIcon";
-import { IProductQuatitied } from "./../../../../interfaces/index";
-import useItemQuantity from "./../../hooks/useItemQuantity";
+import TrashIcon from "@images/TrashIcon";
+import { IProductQuatitied } from "@interfaces/index";
+import useItemQuantity from "@hooks/useItemQuantity";
 
 export default function SharedCartItem({
   item,

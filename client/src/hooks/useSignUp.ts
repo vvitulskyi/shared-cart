@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { useForm } from "@mantine/form";
-import { AppContext } from "../contexts/AppContextProvider";
+import { AppContext } from "@contexts/AppContextProvider";
 import Cookies from "js-cookie";
-import { postRegistration } from "../actions";
-import { IUserRegistration } from "./../../../interfaces/index";
+import { postRegistration } from "@actions";
+import { IUserRegistration } from "@interfaces/index";
 
 export default function useSignUp() {
   const { setUser, setCurrentCart } = useContext(AppContext);
