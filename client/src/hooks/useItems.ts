@@ -13,8 +13,8 @@ export default function useItems({ cartId }: { cartId: string }) {
 
   useEffect(() => {
     if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
-      // const ws = new WebSocket(`ws://${location.host}`);
-      const ws = new WebSocket(`ws://localhost:8080`);
+      const ws = new WebSocket(`ws://${location.host}`);
+      // const ws = new WebSocket(`ws://localhost:8080`);
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (cartId == data.cart_id) setItems(data.items);
