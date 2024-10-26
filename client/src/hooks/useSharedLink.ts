@@ -55,7 +55,7 @@ export default function useSharedLink() {
     postCreateLink(currentCart.value).then(async (res) => {
       if (res.ok) {
         const data = await res.json();
-        setSharedLink(`${location.origin}/cart-connection/${data.link}`);
+        setSharedLink(`${location.origin}/?cart_connection=${data.link}`);
       }
     });
   };
