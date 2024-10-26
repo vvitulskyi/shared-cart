@@ -32,7 +32,7 @@ export const postItemToCart = (productId: string, currentCart: string) =>
     }),
   });
 
-export const getProductsList = () => fetch(`${origin}/api/v1/products/newest`);
+export const getProductsList = () => fetch(`${origin}/api/v1/products/newest`/*, { next: { revalidate: 30 } }*/);
 
 export const postCreateList = () =>
   fetch(`${origin}/api/v1/products/create-list`, {
