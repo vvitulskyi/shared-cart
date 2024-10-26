@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, createContext } from "react";
-import { IAppContext, ICartOption, IUserInfo } from "../../../interfaces/index";
-import { checkAuth } from "../actions";
+import { IAppContext, ICartOption, IUserInfo } from "@interfaces/index";
+import { checkAuth } from "@actions";
 
 export const AppContext = createContext<IAppContext>({} as IAppContext);
 

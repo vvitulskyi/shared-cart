@@ -1,9 +1,9 @@
 "use client";
 
 import { useContext, useEffect, useRef, useState } from "react";
-import { IProductQuatitied } from "./../../../interfaces/index";
-import { getCartItems, postClearCart } from "../actions";
-import { AppContext } from "../contexts/AppContextProvider";
+import { IProductQuatitied } from "@interfaces/index";
+import { getCartItems, postClearCart } from "@actions";
+import { AppContext } from "@contexts/AppContextProvider";
 
 export default function useItems({ cartId }: { cartId: string }) {
   const { setIsCartOpen } = useContext(AppContext);

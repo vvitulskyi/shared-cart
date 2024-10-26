@@ -23,7 +23,15 @@
       }
     ],
     "strictNullChecks": true,
-    "target": "ES2017"
+    "target": "ES2017",
+    "paths": {
+      "@hooks/*": ["./src/hooks/*"],
+      "@interfaces/*": ["./../interfaces/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@components/*": ["./src/components/*"],
+      "@images/*": ["./src/images/*"],
+      "@actions": ["./src/actions/index"],
+    }
   },
   "include": [
     "next-env.d.ts",

@@ -7,10 +7,10 @@ import {
   Title,
 } from "@mantine/core";
 import { IProduct } from "../../interfaces";
-import { getProductsList, postCreateList } from "../src/actions";
-import ProductItem from "../src/components/ProductItem";
-import ClientBtn from "../src/components/next-components/ClientBtn";
-import ClientSidebar from "../src/components/next-components/ClientSidebar";
+import { getProductsList, postCreateList } from "@actions";
+import ProductItem from "@components/ProductItem";
+import ClientBtn from "@components/next-components/ClientBtn";
+import ClientSidebar from "@components/next-components/ClientSidebar";
 
 const productList = async () => {
   const productsData = await getProductsList();
@@ -24,11 +24,7 @@ const productList = async () => {
   return products;
 };
 
-export default async function MainPage({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function MainPage() {
   const products = await productList();
   return (
     <AppShell header={{ height: 60 }} padding="md">

@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { AppContext } from "../contexts/AppContextProvider";
+import { AppContext } from "@contexts/AppContextProvider";
 import { useForm } from "@mantine/form";
-import { IUserLogin } from "./../../../interfaces/index";
-import { postLogin } from "../actions";
+import { IUserLogin } from "@interfaces/index";
+import { postLogin } from "@actions";
 import Cookies from "js-cookie";
 
 export default function useSignIn() {

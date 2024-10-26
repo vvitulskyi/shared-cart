@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { AppContext } from "../contexts/AppContextProvider";
+import { AppContext } from "@contexts/AppContextProvider";
 import { useContext } from "react";
-import { getCartConnection } from "../actions";
-// import { IProduct } from "./../../../interfaces/index";
+import { getCartConnection } from "@actions";
+// import { IProduct } from "@interfaces/index";
 
 export default function useHomePage() {
   const searchParams = useSearchParams();
