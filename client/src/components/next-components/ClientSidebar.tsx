@@ -3,7 +3,7 @@ import { Drawer } from "@mantine/core";
 import useHomePage from "@hooks/useHomePage";
 import Sidebar from "../Sidebar";
 
-export default function ClientBtn() {
+export default function ClientSidebar() {
   const { setIsCartOpen, isCartOpen } = useHomePage();
 
   return (

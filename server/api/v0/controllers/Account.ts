@@ -54,9 +54,15 @@ class Account {
 
           const { password_hash, _id, ...userData } = user;
 
+          res.cookie("auth_token", authToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            maxAge: 3600000,
+          });
+
           res.status(200).json({
             ...userData,
-            token: authToken,
           });
         } catch (err) {
           console.log(err);
@@ -66,6 +72,19 @@ class Account {
         }
       }
     );
+
+    // Logout
+    this.router.post("/account/logout", async (req: Request, res: Response) => {
+      try {
+        res.clearCookie("auth_token");
+        res.status(200).json();
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({
+          message: "Failed to authenticate",
+        });
+      }
+    });
 
     // Registration
     this.router.post(
@@ -104,11 +123,17 @@ class Account {
             }
           );
 
+          res.cookie("auth_token", authToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            maxAge: 3600000,
+          });
+
           const { password_hash, _id, ...userData } = userObject;
 
           res.status(200).json({
             ...userData,
-            token: authToken,
           });
         } catch (err) {
           console.log(err);

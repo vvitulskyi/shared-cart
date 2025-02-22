@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { useForm } from "@mantine/form";
 import { AppContext } from "@contexts/AppContextProvider";
-import Cookies from "js-cookie";
 import { postRegistration } from "@actions";
 import { IUserRegistration } from "@interfaces/index";
 
@@ -32,7 +31,6 @@ export default function useSignUp() {
           label: `1) ${data.shared_carts && data.shared_carts[0]}`,
           value: data.shared_carts[0],
         });
-        Cookies.set("auth_token", data.token, { expires: 30, path: "/" });
       } else {
         const data = await res.json();
         if (data.message) form.setFieldError("password", data.message);
