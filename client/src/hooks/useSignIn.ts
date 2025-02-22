@@ -3,7 +3,6 @@ import { AppContext } from "@contexts/AppContextProvider";
 import { useForm } from "@mantine/form";
 import { IUserLogin } from "@interfaces/index";
 import { postLogin } from "@actions";
-import Cookies from "js-cookie";
 
 export default function useSignIn() {
   const { setUser, setCurrentCart } = useContext(AppContext);
@@ -29,7 +28,6 @@ export default function useSignIn() {
           label: `1) ${data.shared_carts && data.shared_carts[0]}`,
           value: data.shared_carts[0],
         });
-        Cookies.set("auth_token", data.token, { expires: 30, path: "/" });
       } else {
         const data = await res.json();
         if (data.message) form.setFieldError("password", data.message);

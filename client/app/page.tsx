@@ -6,11 +6,12 @@ import {
   Grid,
   Title,
 } from "@mantine/core";
-import { IProduct } from "../../interfaces";
+import { IProduct } from "./../../server/interfaces";
 import { getProductsList, postCreateList } from "@actions";
 import ProductItem from "@components/ProductItem";
 import ClientBtn from "@components/next-components/ClientBtn";
 import ClientSidebar from "@components/next-components/ClientSidebar";
+import { Suspense } from "react";
 
 const productList = async () => {
   const productsData = await getProductsList();
@@ -40,7 +41,9 @@ export default async function MainPage() {
           mr="40"
         >
           <Title order={1}>Shared Cart</Title>
-          <ClientBtn />
+          <Suspense fallback={null}>
+            <ClientBtn />
+          </Suspense>
         </Flex>
       </AppShellHeader>
 
@@ -50,8 +53,9 @@ export default async function MainPage() {
             <ProductItem key={product._id.toString()} {...product} />
           ))}
         </Grid>
-
-        <ClientSidebar />
+        <Suspense fallback={null}>
+          <ClientSidebar />
+        </Suspense>
       </AppShellMain>
     </AppShell>
   );

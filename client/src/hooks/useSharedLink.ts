@@ -1,7 +1,6 @@
 "use client";
 
-import Cookies from "js-cookie";
-import { postCreateLink, postNewCart } from "@actions";
+import { postCreateLink, postLogout, postNewCart } from "@actions";
 import { ICartOption } from "@interfaces/index";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "@contexts/AppContextProvider";
@@ -34,8 +33,9 @@ export default function useSharedLink() {
   };
 
   const logoutHandler = () => {
-    setUser(null);
-    Cookies.remove("auth_token", { path: "" });
+    postLogout().then(() => {
+      setUser(null);
+    });
   };
 
   const addHandler = () => {

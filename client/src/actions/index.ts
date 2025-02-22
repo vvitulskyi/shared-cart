@@ -50,6 +50,12 @@ export const postLogin = (values: IUserLogin) =>
     body: JSON.stringify(values),
   });
 
+export const postLogout = () =>
+  fetch(`${origin}/api/v1/account/logout`, {
+    ...general,
+    method: "POST",
+  });
+
 export const postRegistration = (values: IUserRegistration) =>
   fetch(`${origin}/api/v1/account/registration`, {
     ...general,
