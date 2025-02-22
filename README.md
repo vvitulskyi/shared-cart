@@ -2,6 +2,7 @@
 
 ## Basic:
 
+
 1. Clone the project to your device.
 2. Make sure you have the latest version of node.js installed.
 3. Create account and new DB on [https://www.mongodb.com/](https://www.mongodb.com/)
