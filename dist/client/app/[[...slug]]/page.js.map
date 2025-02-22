@@ -1,1 +1,0 @@
-{"version":3,"file":"page.js","sourceRoot":"","sources":["../../../../client/app/[[...slug]]/page.tsx"],"names":[],"mappings":";AAAA,OAAO,4BAA4B,CAAC;AACpC,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC,MAAM,UAAU,oBAAoB;IAClC,OAAO,CAAC,EAAE,IAAI,EAAE,CAAC,EAAE,CAAC,EAAE,CAAC,CAAC;AAC1B,CAAC;AAED,MAAM,CAAC,OAAO,UAAU,IAAI;IAC1B,OAAO,KAAC,UAAU,KAAG,CAAC;AACxB,CAAC"}
