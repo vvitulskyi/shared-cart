@@ -60,8 +60,8 @@ export default function SharedCartsList() {
         </Tooltip>
       </Flex>
       <Select
-        label="Select shared cart"
-        placeholder="Pick cart"
+        label="Select favorites list"
+        placeholder="Pick list"
         data={options}
         value={currentCart.value}
         onChange={changeHanler}
@@ -69,7 +69,7 @@ export default function SharedCartsList() {
       <Flex justify="center" mt="md" direction="column" mb="md">
         <Button variant="filled" color="orange" onClick={addHandler}>
           <AddIcon style={{ marginRight: "10px" }} />
-          Add new cart
+          Add new favorites list
         </Button>
         {sharedLink ? (
           <TextInput
@@ -112,7 +112,7 @@ export default function SharedCartsList() {
             onClick={shareLinkHandler}
           >
             <LinkIcon style={{ marginRight: "10px" }} />
-            Share cart (Link expires after 24 hours)
+            Share list (Link expires after 24 hours)
           </Button>
         )}
       </Flex>

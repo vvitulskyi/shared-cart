@@ -51,10 +51,7 @@ export default function SharedCartItemsList({ cartId }: { cartId: string }) {
       </Title>
       <Group justify="center" mt="md" wrap="wrap" grow={true}>
         <Button w="50%" miw="200px" color="red" onClick={clearHandler}>
-          Clear cart
-        </Button>
-        <Button w="50%" miw="200px" color="green" onClick={checkoutHandler}>
-          Continue to Checkout
+          Clear list
         </Button>
       </Group>
     </Box>

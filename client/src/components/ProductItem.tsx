@@ -29,7 +29,7 @@ export default function ProductItem({
           style={{ marginTop: 10 }}
           color="teal"
         >
-          Add to Cart
+          Add to favorites
         </Button>
       </Card>
     </Grid.Col>

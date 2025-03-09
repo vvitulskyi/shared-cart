@@ -10,7 +10,7 @@ export default function ClientSidebar() {
     <Drawer
       opened={isCartOpen}
       onClose={() => setIsCartOpen(false)}
-      title="Your Shared Carts"
+      title="Your favorites"
       padding="lg"
       position="right"
       size="lg"

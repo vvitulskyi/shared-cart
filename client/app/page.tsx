@@ -40,7 +40,7 @@ export default async function MainPage() {
           ml="40"
           mr="40"
         >
-          <Title order={1}>Shared Cart</Title>
+          <Title order={1}>Shared favorites</Title>
           <Suspense fallback={null}>
             <ClientBtn />
           </Suspense>

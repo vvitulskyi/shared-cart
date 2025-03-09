@@ -4,9 +4,9 @@ import "@mantine/core/styles.css";
 import AppContextProvider from "../src/contexts/AppContextProvider";
 
 export const metadata: Metadata = {
-  title: "Shared Cart",
+  title: "Shared favorites",
   description:
-    "Shared Cart is a web application for collaborative editing of a cart",
+    "Shared favorites is a web application for collaborative editing of a cart",
 };
 
 export default function RootLayout({
