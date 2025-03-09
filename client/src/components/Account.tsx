@@ -6,7 +6,7 @@ export default function Account() {
   return (
     <>
       <Title order={5} mb="md">
-        Login to access the shared carts
+        Login to access the shared favorites
       </Title>
       <Tabs defaultValue="sign-in">
         <Tabs.List>

@@ -1,4 +1,4 @@
-# Shared Cart
+# Shared favorites
 
 ## Basic:
 
@@ -16,7 +16,7 @@
 
 ```
 PORT=8080
-MONGODB_URL=mongodb+srv://<userName>:<password>@sharedcart.pz4jdiu.mongodb.net/<NameDB>?retryWrites=true&w=majority&appName=sharedcart
+MONGODB_URL=mongodb+srv://<USER_NAME>:<PASSWORD>@<CLUSTER_NAME>.<CLUSTER_PREFIX>.mongodb.net/<DB_NAME>?retryWrites=true&w=majority&appName=<APP_NAME>
 SECRET_KEY=secret_key
 LINK_SECRET_KEY=secret_key
 ```

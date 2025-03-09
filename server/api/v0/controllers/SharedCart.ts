@@ -16,7 +16,7 @@ class SharedCart {
   constructor() {
     this.router = Router();
 
-    // Connect to shared cart by link
+    // Connect to favorites by link
     this.router.get(
       "/shared-cart/connection/:link",
       checkAuth,
@@ -73,7 +73,7 @@ class SharedCart {
       }
     );
 
-    // Create link for shared cart
+    // Create link for favorites
     this.router.post(
       "/shared-cart/link/create",
       checkAuth,
@@ -105,7 +105,7 @@ class SharedCart {
       }
     );
 
-    // Create shared cart
+    // Create favorites
     this.router.patch("/shared-cart/create", checkAuth, async (req, res) => {
       try {
         const user = await UserModel.findById(req.user_id);
@@ -136,7 +136,7 @@ class SharedCart {
       }
     });
 
-    // Get shared cart products
+    // Get favorites products
     this.router.get("/shared-cart/:cart_id", checkAuth, async (req, res) => {
       try {
         const { user_id, params } = req;
@@ -189,7 +189,7 @@ class SharedCart {
       }
     });
 
-    // Get shared cart products NEW
+    // Get favorites products NEW
     this.router.get(
       "/shared-cart/:cart_id/norm",
       checkAuth,
@@ -257,7 +257,7 @@ class SharedCart {
       }
     );
 
-    // Add item to shared cart
+    // Add item to favorites
     this.router.patch("/shared-cart/add-item", checkAuth, async (req, res) => {
       try {
         const { product_id, cart_id } = req.body;
@@ -380,7 +380,7 @@ class SharedCart {
       }
     );
 
-    // Clear shared cart
+    // Clear favorites
     this.router.patch("/shared-cart/clear", checkAuth, async (req, res) => {
       try {
         const { cart_id } = req.body;
